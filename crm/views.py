@@ -1,33 +1,23 @@
 import datetime
-import tempfile
+import io
+from _decimal import Decimal
 
-from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth import authenticate
+from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.db.models import Sum
+from django.http import FileResponse
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Sum
-from _decimal import Decimal
-from django.http import JsonResponse, HttpResponse
-from django.http import FileResponse
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-from django.template.loader import render_to_string
-from import_export.formats.base_formats import HTML
-from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A3
 from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter,A3
-import io
-from django.views import generic
-from django.urls import reverse_lazy
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-import csv
-from tablib import Dataset
-from .resources import CustomerReport
-from django.core.files.storage import FileSystemStorage
+from reportlab.pdfgen import canvas
 
 from .forms import *
 from .models import *
+from .resources import CustomerReport
 
 now = timezone.now()
 
