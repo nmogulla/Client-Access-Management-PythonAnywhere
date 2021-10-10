@@ -1,14 +1,30 @@
+import datetime
+import tempfile
+
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Sum
 from _decimal import Decimal
+from django.http import JsonResponse, HttpResponse
+from django.http import FileResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from django.template.loader import render_to_string
+from import_export.formats.base_formats import HTML
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter,A3
+import io
 from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+import csv
+from tablib import Dataset
+from .resources import CustomerReport
+from django.core.files.storage import FileSystemStorage
 
 from .forms import *
 from .models import *
@@ -206,3 +222,45 @@ def logout_view(request):
     request.session.flush()
     return render(request, 'crm/home.html',
                   {'crm': home})
+
+
+def export_csv(request):
+    # if request.method == 'POST':
+    # Get selected option from form
+    # file_format = request.POST['file-format']
+    customer_report = CustomerReport()
+    dataset = customer_report.export()
+    # if file_format == 'CSV':
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=exported_data.csv'
+    return response
+
+
+def export_pdf(request):
+    buffer = io.BytesIO()
+
+    # Create the PDF object, using the buffer as its "file."
+    x = Customer.objects.all()
+    p = canvas.Canvas(buffer, pagesize=A3, bottomup=0)
+    textobj = p.beginText()
+    textobj.setTextOrigin(inch, inch)
+    textobj.setFont("Helvetica", 14)
+    for a in x:
+        textobj.textLine('Customer Name: '+ a.cust_name)
+        textobj.textLine('Organization: ' + a.organization)
+        textobj.textLine('Role: ' + a.role)
+        textobj.textLine('Email: ' + a.email)
+        textobj.textLine('Phone Number: ' + a.phone_number)
+        textobj.textLine('Building Room: ' + a.bldgroom)
+        textobj.textLine('Account Number: ' + str(a.account_number))
+        textobj.textLine('Address: ' + a.address)
+        textobj.textLine('City: ' + a.city)
+        textobj.textLine('State: ' + a.state)
+        textobj.textLine('Zip Code: ' + a.zipcode)
+        textobj.textLine()
+
+    p.drawText(textobj)
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='exported_pdf' + str(datetime.datetime.now()) + '.pdf')

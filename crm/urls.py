@@ -22,4 +22,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('login', auth_views.LoginView.as_view(), {'template_name': 'registration/login.html'}, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('export_csv/', views.export_csv, name='export-csv'),
+    path('export_pdf/', views.export_pdf, name='export-pdf'),
 ]

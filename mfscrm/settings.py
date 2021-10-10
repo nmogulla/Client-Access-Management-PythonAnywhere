@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'crm.apps.CrmConfig',
     'mathfilters',
     'django.contrib.humanize',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -136,4 +137,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
