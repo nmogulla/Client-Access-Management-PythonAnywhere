@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Clients{% endblock title %}
+
+{% block content %}
+  {% for client in object_list %}
+    <div class="card">
+      <div class="card-header">
+        <span class="font-weight-bold">{{ client.name }} | </span>
+        <span class="font-weight-bold">cell: {{ client.cell_phone }} | </span>
+        <span class="font-weight-bold">acct: {{ client.acct_number }} | </span>
+
+        <span class="font-muted">addr: {{ client.address }} | </span>
+        <span class="font-muted-">city: {{ client.city }} | </span>
+        <span class="font-muted">st: {{ client.state }} | </span>
+        <span class="font-muted">zip: {{ client.zipcode }} | </span>
+        <span class="font-muted">email: {{ client.email }} | </span>
+      </div>
+      <div class="card-body">
+        <p>{{client.notes}}</p>
+        <p><a href="{% url 'client_edit' client.pk %}">Edit</a> | <a href="{% url 'client_delete' client.pk %}">Delete</a></p>
+      </div>
+      <div class="card-footer">
+        <p class="font-weight-bold">Vehicle Information of {{ client.name }} : </p>
+        {% for vehicle in client.vehicles.all %}
+          <p>
+            <span class="font-muted">Make: {{ vehicle.make}} | </span>
+            <span class="font-muted">Model: {{ vehicle.model }} | </span>
+            <span class="font-muted">VIN Number: {{ vehicle.VIN_number }} | </span>
+            <span class="font-muted">date_of_purchase: {{ vehicle.date_of_purchase }} | </span>
+            <span class="font-muted">date_of_last_service: {{ vehicle.date_of_last_service }} </span>
+            {{ comment }}
+          </p>
+        {% endfor %}
+        <p class="font-weight-bold">Comment History of {{ client.name }} : </p>
+        <p><a href="{% url 'comment_create' %}">Add</a> </p>
+        {% for comment in client.comments.all %}
+          <p>
+            <span class="font-muted">{{ comment.author }} &middot;</span>
+            <span class="font-muted">{{ comment.client }} &middot;</span>
+            {{ comment }}
+          </p>
+          <p> </a><a href="{% url 'comment_edit' comment.pk %}">Edit</a> | <a href="{% url 'comment_delete' comment.pk %}">Delete</a></p>
+        {% endfor %}
+      </div>
+    </div>
+    <br />
+  {% endfor %}
+{% endblock content %}
+

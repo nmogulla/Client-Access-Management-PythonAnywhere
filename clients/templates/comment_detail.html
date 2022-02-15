@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="comment-entry">
+  <h2>{{ object.comment }}</h2>
+</div>
+  <p><a href="{% url 'comment_edit' comment.pk %}">Edit</a> </p>
+{% endblock content %}
