@@ -22,6 +22,7 @@
       </div>
       <div class="card-footer">
         <p class="font-weight-bold">Vehicle Information of {{ client.name }} : </p>
+        <p><a href="{% url 'vehicle_create' %}">Add</a> </p>
         {% for vehicle in client.vehicles.all %}
           <p>
             <span class="font-muted">Make: {{ vehicle.make}} | </span>
@@ -31,6 +32,7 @@
             <span class="font-muted">date_of_last_service: {{ vehicle.date_of_last_service }} </span>
             {{ comment }}
           </p>
+          <p> </a><a href="{% url 'vehicle_edit' vehicle.pk %}">Edit</a> | <a href="{% url 'vehicle_delete' vehicle.pk %}">Delete</a></p>
         {% endfor %}
         <p class="font-weight-bold">Comment History of {{ client.name }} : </p>
         <p><a href="{% url 'comment_create' %}">Add</a> </p>

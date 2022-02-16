@@ -9,6 +9,9 @@ from .views import (
     CommentUpdateView,
     CommentDeleteView,
     CommentCreateView,
+    VehicleCreateView,
+    VehicleUpdateView,
+    VehicleDeleteView,
 )
 
 urlpatterns = [
@@ -24,6 +27,9 @@ urlpatterns = [
     path('<int:pk>/commentedit/', CommentUpdateView.as_view(), name='comment_edit'),
     path('<int:pk>/commentdelete/', CommentDeleteView.as_view(), name='comment_delete'),
     path('commentcreate/', CommentCreateView.as_view(), name='comment_create'),
+    path('vehiclecreate/', VehicleCreateView.as_view(), name='vehicle_create'),
+    path('<int:pk>/vehicleedit/', VehicleUpdateView.as_view(), name='vehicle_edit'),
+    path('<int:pk>/vehicledelete/', VehicleDeleteView.as_view(), name='vehicle_delete'),
    # path('commentcreate/', CommentCreateView.as_view(), name='comment_create'),
 
 ]

@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.backends import sqlite3
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.views.generic import ListView, DetailView
-from .models import models, Comment
+from .models import models, Comment, Vehicle
 from .models import Client
 from django.urls import reverse_lazy
 
@@ -82,3 +82,33 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         # Comment.objects.filter('form.instance.client_id = self.request.user.id').first()
         form.instance.Client = Client.objects.filter(author=self.request.user)
         return super().form_valid(form)
+
+
+class VehicleCreateView(LoginRequiredMixin, CreateView):
+    model = Vehicle
+    template_name = 'vehicle_create.html'
+    fields = ('make', 'model', 'VIN_number', 'date_of_purchase', 'date_of_last_service', 'client')
+    login_url = 'login'
+    success_url = reverse_lazy('client_list')
+
+    def get_queryset(self):
+        return Client.objects.filter(author=self.request.user)
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        # Comment.objects.filter('form.instance.client_id = self.request.user.id').first()
+        form.instance.Client = Client.objects.filter(author=self.request.user)
+        return super().form_valid(form)
+
+
+class VehicleDeleteView(LoginRequiredMixin, DeleteView):
+    model = Vehicle
+    template_name = 'vehicle_delete.html'
+    success_url = reverse_lazy('client_list')
+
+
+class VehicleUpdateView(LoginRequiredMixin, UpdateView):
+    model = Vehicle
+    fields = ('make', 'model', 'VIN_number', 'date_of_purchase', 'date_of_last_service',)
+    template_name = 'vehicle_edit.html'
+    success_url = reverse_lazy('client_list')
